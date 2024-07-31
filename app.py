@@ -24,10 +24,16 @@ def after_request(response):
 @app.route("/")
 def index():
     """Main Page"""
-    #TODO
+    return render_template("index.html")
 
 
-@app.route("/output")
+@app.route("/get-palette")
 def output():
     """Show generated palette"""
     #TODO
+
+    # Open image using Pillow
+    # (Optional) Resize image to lower computational load
+    # Iterate over each pixel
+    # Cluster pixel to gather macro groups (5 colors hardcoded for now)
+    # Return palette codes
