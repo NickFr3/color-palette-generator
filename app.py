@@ -1,5 +1,6 @@
 from flask import Flask, flash, redirect, render_template, request, session
 from flask_session import Session
+from PIL import Image
 
 
 # Configure application
@@ -27,13 +28,36 @@ def index():
     return render_template("index.html")
 
 
-@app.route("/get-palette")
+@app.route("/get-palette", methods=["GET", "POST"])
 def output():
     """Show generated palette"""
-    #TODO
+    if request.method == "POST":
+        # Open image using Pillow
+        img = Image.open(request.files("image"))
 
-    # Open image using Pillow
-    # (Optional) Resize image to lower computational load
-    # Iterate over each pixel
-    # Cluster pixel to gather macro groups (5 colors hardcoded for now)
-    # Return palette codes
+        # Get size of image
+        width, height = img.size
+
+        # Resize image to lower computational load if bigger than 1080p
+        if width > 1920 or height > 1080:
+            # Calculate new size while maintaining same aspect ratio
+            aspect_ratio = width / height
+
+            if width > height:
+                new_width = 1920
+                new_height = int(new_width / aspect_ratio)
+
+            else:
+                new_height = 1080
+                new_width = int(new_height * aspect_ratio)
+
+            # Resize the image
+            img = img.resize((new_width, new_height), Image.LANCZOS)
+        
+        # Get list of pixels as list of tuples containing RGB values
+        pixels = list(img.getdata())
+
+        # Map list of pixels as a 2d array
+        # Iterate over each pixel   
+        # Cluster pixel to gather macro groups (5 colors hardcoded for now)
+        # Return palette codes
