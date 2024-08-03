@@ -1,6 +1,8 @@
 from flask import Flask, flash, redirect, render_template, request, session
 from flask_session import Session
 from PIL import Image
+import numpy as np
+from sklearn.cluster import KMeans
 
 
 # Configure application
@@ -56,8 +58,12 @@ def output():
         
         # Get list of pixels as list of tuples containing RGB values
         pixels = list(img.getdata())
-
         # Map list of pixels as a 2d array
-        # Iterate over each pixel   
+        pixels = np.array(pixels)  
         # Cluster pixel to gather macro groups (5 colors hardcoded for now)
-        # Return palette codes
+        cluster = KMeans(n_clusters=5)
+        cluster.fit(pixels)
+        # Get colors as an Array of RGB values arrays
+        colors = cluster.cluster_centers_
+
+        # Convert array or RGBs to array of HEX codes
